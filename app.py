@@ -20,8 +20,31 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    rooms = Room.query.all()
-    return render_template('index.html', rooms=rooms)
+    keyword = request.args.get('keyword', '').strip()
+    district = request.args.get('district', '').strip()
+    max_price = request.args.get('max_price', type=float)
+
+    query = Room.query
+    # Keyword
+    if keyword:
+        query = query.filter(Room.title.ilike(f"%{keyword}%") | Room.description.ilike(f"%{keyword}%"))
+
+    # District
+    if district:
+        query = query.filter(Room.district == district)
+
+    # Price filter
+    if max_price:
+        query = query.filter(Room.price <= max_price)
+
+    rooms = query.all()
+    return render_template(
+        'index.html',
+        rooms=rooms,
+        keyword=keyword,
+        district=district,
+        max_price=max_price
+    )
 
 @app.route('/login')
 def login():

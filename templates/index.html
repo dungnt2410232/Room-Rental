@@ -3,6 +3,37 @@
 {% block title %}Home - USTH Room Finder{% endblock %}
 
 {% block content %}
+<!-- Form tìm kiếm & Bộ lọc -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-3">
+        <form method="GET" action="/" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <input type="text" name="keyword" class="form-control" placeholder="Find for the room, place..." value="{{ keyword or '' }}">
+            </div>
+            <div class="col-md-3">
+                <select name="district" class="form-select">
+                    <option value="">All areas</option>
+                    <option value="Cau Giay" {% if district == 'Cau Giay' %}selected{% endif %}>Cau Giay</option>
+                    <option value="Hai Ba Trung" {% if district == 'Hai Ba Trung' %}selected{% endif %}>Hai Ba Trung</option>
+                    <option value="Nam Tu Liem" {% if district == 'Nam Tu Liem' %}selected{% endif %}>Nam Tu Liem</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="max_price" class="form-select">
+                    <option value="">All price</option>
+                    <option value="2000000" {% if max_price == 2000000 %}selected{% endif %}>Dưới 2.000.000 đ</option>
+                    <option value="4000000" {% if max_price == 4000000 %}selected{% endif %}>Dưới 4.000.000 đ</option>
+                    <option value="6000000" {% if max_price == 6000000 %}selected{% endif %}>Dưới 6.000.000 đ</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                <a href="/" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold mb-0">Latest Accommodations</h3>
     <span class="text-muted small">{{ rooms|length }} rooms available</span>
