@@ -3,6 +3,7 @@
 A web-based accommodation search platform built with **Python (Flask)**, **SQLite**, and **Bootstrap 5**.
 
 Repository: https://github.com/dungnt2410232/Room-Rental
+.
 Push to your device before working
   ```bash
    git pull origin main
