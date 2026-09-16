@@ -3,11 +3,34 @@
 {% block title %}Login - USTH Room Finder{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center py-5">
+<div class="row justify-content-center pt-4">
     <div class="col-md-5 col-lg-4">
-        <div class="card shadow-sm border-0 p-4">
-            <h4 class="fw-bold text-center mb-4">Login</h4>
-            <!-- LOGIN -->
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+            <h4 class="fw-bold mb-3 text-center">Welcome back</h4>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert alert-{{ category }} py-2 small mb-3">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/login">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">USERNAME</label>
+                    <input type="text" name="username" class="form-control py-2" required placeholder="Enter your username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">PASSWORD</label>
+                    <input type="password" name="password" class="form-control py-2" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-2">Log in</button>
+            </form>
+
+            <div class="text-center mt-3 small text-muted">
+                Don't have an account? <a href="/register" class="text-decoration-none fw-bold text-dark">Register</a>
+            </div>
         </div>
     </div>
 </div>

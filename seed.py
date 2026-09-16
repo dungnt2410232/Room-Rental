@@ -9,8 +9,7 @@ with app.app_context():
     if not host:
         host = User(
             username='chutro1',
-            email='chutro@example.com',
-            password=generate_password_hash('123456'),
+            password=generate_password_hash('123456', method='pbkdf2:sha256'),
             role='chutro'
         )
         db.session.add(host)

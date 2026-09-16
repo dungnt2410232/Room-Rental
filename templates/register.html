@@ -3,11 +3,41 @@
 {% block title %}Register - USTH Room Finder{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center py-5">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm border-0 p-4">
-            <h4 class="fw-bold text-center mb-4">Create an Account</h4>
-            <!-- REGISTER -->
+<div class="row justify-content-center pt-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+            <h4 class="fw-bold mb-3 text-center">Create an account</h4>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert alert-{{ category }} py-2 small mb-3">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/register">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">USERNAME</label>
+                    <input type="text" name="username" class="form-control py-2" required placeholder="Choose a username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">ACCOUNT TYPE</label>
+                    <select name="role" class="form-select py-2">
+                        <option value="sinhvien">Student (Looking for room)</option>
+                        <option value="chutro">Owner (Posting rooms)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">PASSWORD</label>
+                    <input type="password" name="password" class="form-control py-2" required placeholder="Create password">
+                </div>
+                <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-2">Sign up</button>
+            </form>
+
+            <div class="text-center mt-3 small text-muted">
+                Already have an account? <a href="/login" class="text-decoration-none fw-bold text-dark">Log in</a>
+            </div>
         </div>
     </div>
 </div>
