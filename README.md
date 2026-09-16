@@ -20,6 +20,9 @@ Repository: https://github.com/dungnt2410232/Room-Rental
   ```
 - Only commit your work to your own branch.
 - Submit a **Pull Request (PR)** on GitHub when your feature is ready for review.
+  Example: git add app.py templates/index.html
+           git commit -m "Complete search and filter feature "
+           git push -u origin feature/search-filter
 
 ---
 
