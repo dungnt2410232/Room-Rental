@@ -103,10 +103,119 @@ def room_detail(room_id):
     room = Room.query.get_or_404(room_id)
     return render_template('room_detail.html', room=room)
 
-@app.route('/post')
+@app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post_room():
+    # Chi cho phep role'chutro' dang bai
+    if current_user.role != 'chutro':
+        flash('Only owners can post rooms.', 'danger')
+        return redirect(url_for('index'))
+
+    # Xu ly submit form
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        price = request.form.get('price', type=float)
+        area = request.form.get('area', type=float)
+        district = request.form.get('district', '').strip()
+        address = request.form.get('address', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+        description = request.form.get('description', '').strip()
+
+        # Validate cac truong bat buoc
+        if not all([title, price, area, district, address]):
+            flash('Please fill in all required fields.', 'danger')
+            return redirect(url_for('post_room'))
+
+        # Link anh mac dinh neu bo trong
+        if not image_url:
+            image_url = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600'
+
+        # Tao va luu Room moi gan voi current_user.id
+        new_room = Room(
+            title=title,
+            price=price,
+            area=area,
+            district=district,
+            address=address,
+            image_url=image_url,
+            description=description,
+            chutro_id=current_user.id
+        )
+
+        db.session.add(new_room)
+        db.session.commit()
+
+        flash('Room posted successfully!', 'success')
+        return redirect(url_for('room_detail', room_id=new_room.id))
+
     return render_template('post_room.html')
+
+@app.route('/my-rooms')
+@login_required
+def my_rooms():
+    # Only role chutro moi co trang quan ly
+    if current_user.role != 'chutro':
+        flash('Access denied. Only owners can view their listings.', 'danger')
+        return redirect(url_for('index'))
+
+    # Check cac phong dang thuoc so huu cua user
+    rooms = Room.query.filter_by(chutro_id=current_user.id).order_by(Room.id.desc()).all()
+    return render_template('my_rooms.html', rooms=rooms)
+
+
+@app.route('/room/<int:room_id>/delete', methods=['POST'])
+@login_required
+def delete_room(room_id):
+    room = Room.query.get_or_404(room_id)
+
+    # Khong cho phep xoa cua nguoi khac
+    if room.chutro_id != current_user.id:
+        flash('You are not authorized to delete this room.', 'danger')
+        return redirect(url_for('my_rooms'))
+
+    db.session.delete(room)
+    db.session.commit()
+
+    flash(f'Room "{room.title}" has been deleted.', 'success')
+    return redirect(url_for('my_rooms'))
+
+@app.route('/room/<int:room_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_room(room_id):
+    room = Room.query.get_or_404(room_id)
+
+    # Chi co role chu tro moi dc chinh sua
+    if room.chutro_id != current_user.id:
+        flash('You are not authorized to edit this room.', 'danger')
+        return redirect(url_for('my_rooms'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        price = request.form.get('price', type=float)
+        area = request.form.get('area', type=float)
+        district = request.form.get('district', '').strip()
+        address = request.form.get('address', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+        description = request.form.get('description', '').strip()
+
+        if not all([title, price, area, district, address]):
+            flash('Please fill in all required fields.', 'danger')
+            return redirect(url_for('edit_room', room_id=room.id))
+
+        # Update room detail
+        room.title = title
+        room.price = price
+        room.area = area
+        room.district = district
+        room.address = address
+        room.image_url = image_url if image_url else room.image_url
+        room.description = description
+
+        db.session.commit()
+        flash('Room updated successfully!', 'success')
+        return redirect(url_for('my_rooms'))
+
+    return render_template('edit_room.html', room=room)
 
 if __name__ == '__main__':
     app.run(debug=True)
