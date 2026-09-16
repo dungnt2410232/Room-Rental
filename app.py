@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager
 from models import db, User, Room
 
@@ -20,7 +20,25 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    rooms = Room.query.all()
+    return render_template('index.html', rooms=rooms)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/room/<int:room_id>')
+def room_detail(room_id):
+    room = Room.query.get_or_404(room_id)
+    return render_template('room_detail.html', room=room)
+
+@app.route('/post')
+def post_room():
+    return render_template('post_room.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
