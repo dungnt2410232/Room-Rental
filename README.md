@@ -3,17 +3,19 @@
 A web-based accommodation search platform built with **Python (Flask)**, **SQLite**, and **Bootstrap 5**.
 
 Repository: https://github.com/dungnt2410232/Room-Rental
-
+Push to your device before working
+  ```bash
+   git pull origin main
+   pip install -r requirements.txt
+   python seed.py
+   python app.py
+  ```
 ---
 
 ## ⚠️ ATTENTION
 
 - **NEVER** commit or push directly to `main`.
 - Always pull the latest code before working:
-  ```bash
-  git checkout main
-  git pull origin main
-  ```
 - Create and switch to your assigned feature branch:
   ```bash
   git checkout -b feature/<branch-name>
