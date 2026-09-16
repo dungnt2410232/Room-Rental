@@ -6,7 +6,7 @@ Repository: https://github.com/dungnt2410232/Room-Rental
 
 ---
 
-## ⚠️ Important Git Guidelines
+## ⚠️ ATTENTION
 
 - **NEVER** commit or push directly to `main`.
 - Always pull the latest code before working:
