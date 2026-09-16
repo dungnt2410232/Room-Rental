@@ -4,10 +4,71 @@
 
 {% block content %}
 <div class="row justify-content-center py-4">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm border-0 p-4">
-            <h4 class="fw-bold mb-4">Post a New Room</h4>
-            <!-- POST ROOM -->
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0 p-4" style="border-radius: 16px;">
+            <h4 class="fw-bold mb-3">Post a New Room</h4>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert alert-{{ category }} py-2 small mb-3">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/post">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">TITLE</label>
+                    <input type="text" name="title" class="form-control" required placeholder="e.g. Modern Studio near USTH">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold text-muted">MONTHLY RENT (VND)</label>
+                        <input type="number" name="price" class="form-control" step="100000" min="0" required placeholder="e.g. 3500000">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold text-muted">AREA (m²)</label>
+                        <input type="number" name="area" class="form-control" step="0.5" min="1" required placeholder="e.g. 25">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold text-muted">DISTRICT</label>
+                        <select name="district" class="form-select" required>
+                            <option value="" disabled selected>Select district</option>
+                            <option value="Cau Giay">Cau Giay</option>
+                            <option value="Hai Ba Trung">Hai Ba Trung</option>
+                            <option value="Nam Tu Liem">Nam Tu Liem</option>
+                            <option value="Bac Tu Liem">Bac Tu Liem</option>
+                            <option value="Dong Da">Dong Da</option>
+                            <option value="Ba Dinh">Ba Dinh</option>
+                            <option value="Tay Ho">Tay Ho</option>
+                            <option value="Thanh Xuan">Thanh Xuan</option>
+                            <option value="Hoang Mai">Hoang Mai</option>
+                            <option value="Ha Dong">Ha Dong</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label small fw-bold text-muted">EXACT ADDRESS</label>
+                        <input type="text" name="address" class="form-control" required placeholder="e.g. 18 Hoang Quoc Viet">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">IMAGE URL</label>
+                    <input type="url" name="image_url" class="form-control" placeholder="https://images.unsplash.com/...">
+                    <div class="form-text text-muted small">Paste a direct image link for now.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">DESCRIPTION</label>
+                    <textarea name="description" rows="4" class="form-control" placeholder="Details about amenities, furniture, electricity/water bills..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-2">Publish Room</button>
+            </form>
         </div>
     </div>
 </div>
