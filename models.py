@@ -20,4 +20,4 @@ class Room(db.Model):
     address = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     image_url = db.Column(db.String(255), default='https://placehold.co/600x400')
-    landlord_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    chutro_id = db.Column(db.Integer, db.ForeignKey('user.id'))

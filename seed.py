@@ -27,7 +27,7 @@ with app.app_context():
             address="No. 15, Tran Quoc Hoan Street",
             description="Fully furnished with air conditioning, private balcony, high-speed WiFi, and 24/7 access.",
             image_url="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600",
-            landlord_id=host.id
+            chutro_id=host.id
         ),
         Room(
             title="Modern Mini Apartment with Elevator",
@@ -37,7 +37,7 @@ with app.app_context():
             address="No. 88, Ta Quang Buu Street",
             description="Spacious studio, fingerprint lock, security camera, close to major universities and supermarkets.",
             image_url="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600",
-            landlord_id=host.id
+            chutro_id=host.id
         ),
         Room(
             title="Shared Living Space for Students",
@@ -47,7 +47,7 @@ with app.app_context():
             address="No. 199, Ho Tung Mau Street",
             description="Clean room, shared kitchen, affordable utility fees, convenient public bus stops nearby.",
             image_url="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600",
-            landlord_id=host.id
+            chutro_id=host.id
         )
     ]
 
