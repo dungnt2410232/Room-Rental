@@ -21,3 +21,12 @@ class Room(db.Model):
     description = db.Column(db.Text, nullable=True)
     image_url = db.Column(db.String(255), nullable=True)
     chutro_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    room_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('reviews', lazy=True))

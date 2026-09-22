@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User, Room
+from models import db, User, Room, Review
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nhom-web-dev-secret-key'
@@ -98,10 +98,24 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/room/<int:room_id>')
+@app.route('/room/<int:room_id>', methods=['GET', 'POST'])
 def room_detail(room_id):
     room = Room.query.get_or_404(room_id)
-    return render_template('room_detail.html', room=room)
+    reviews = Review.query.filter_by(room_id=room_id).all()
+
+    if request.method == 'POST':
+        if not current_user.is_authenticated:
+            flash('Vui lòng đăng nhập để bình luận.', 'danger')
+            return redirect(url_for('login'))
+        
+        content = request.form.get('content')
+        if content:
+            new_review = Review(content=content, user_id=current_user.id, room_id=room.id)
+            db.session.add(new_review)
+            db.session.commit()
+            return redirect(url_for('room_detail', room_id=room.id))
+
+    return render_template('room_detail.html', room=room, reviews=reviews)
 
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
