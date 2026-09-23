@@ -103,6 +103,7 @@ def room_detail(room_id):
     room = Room.query.get_or_404(room_id)
     return render_template('room_detail.html', room=room)
 
+
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post_room():
@@ -216,6 +217,42 @@ def edit_room(room_id):
         return redirect(url_for('my_rooms'))
 
     return render_template('edit_room.html', room=room)
+
+
+#favorite system
+@app.route('/room/<int:room_id>/favorite', methods=['POST'])
+@login_required
+def favorite_room(room_id):
+    room = Room.query.get_or_404(room_id)
+
+    if room not in current_user.favorite_rooms:
+        current_user.favorite_rooms.append(room)
+        db.session.commit()
+        flash('Room added to favorites.', 'success')
+    else:
+        flash('Room is already in your favorites.', 'info')
+
+    return redirect(url_for('room_detail', room_id=room.id))
+
+
+@app.route('/room/<int:room_id>/unfavorite', methods=['POST'])
+@login_required
+def unfavorite_room(room_id):
+    room = Room.query.get_or_404(room_id)
+
+    if room in current_user.favorite_rooms:
+        current_user.favorite_rooms.remove(room)
+        db.session.commit()
+        flash('Room removed from favorites.', 'success')
+
+    return redirect(url_for('room_detail', room_id=room.id))
+
+@app.route('/favorites')
+@login_required
+def favorites():
+    rooms = current_user.favorite_rooms
+    return render_template('favorites.html', rooms=rooms)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

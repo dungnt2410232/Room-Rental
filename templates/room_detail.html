@@ -16,12 +16,50 @@
         <!-- MAP AND REVIEW -->
     </div>
     <div class="col-md-4">
-        <div class="card shadow-sm border-0 p-3">
-            <h4 class="text-danger fw-bold mb-3">{{ "{:,.0f}".format(room.price) }} VND/month</h4>
-            <p class="mb-1"><strong>Area:</strong> {{ room.area }} m²</p>
-            <p class="mb-3"><strong>District:</strong> {{ room.district }}</p>
-            <button class="btn btn-primary w-100">Contact Owner</button>
-        </div>
+<div class="card shadow-sm border-0 p-3">
+    <h4 class="text-danger fw-bold mb-3">
+        {{ "{:,.0f}".format(room.price) }} VND/month
+    </h4>
+
+    <p class="mb-1"><strong>Area:</strong> {{ room.area }} m²</p>
+    <p class="mb-3"><strong>District:</strong> {{ room.district }}</p>
+
+    <button class="btn btn-primary w-100">Contact Owner</button>
+
+    {% if current_user.is_authenticated %}
+
+        {% if room in current_user.favorite_rooms %}
+            <form method="POST"
+                  action="{{ url_for('unfavorite_room', room_id=room.id) }}"
+                  class="mt-2">
+
+                <button type="submit"
+                        class="btn btn-outline-danger w-100">
+                    ♥ Remove from Favorites
+                </button>
+            </form>
+
+        {% else %}
+            <form method="POST"
+                  action="{{ url_for('favorite_room', room_id=room.id) }}"
+                  class="mt-2">
+
+                <button type="submit"
+                        class="btn btn-outline-danger w-100">
+                    ♡ Save to Favorites
+                </button>
+            </form>
+        {% endif %}
+
+    {% else %}
+        <a href="{{ url_for('login') }}"
+           class="btn btn-outline-danger w-100 mt-2">
+            ♡ Login to Save
+        </a>
+    {% endif %}
     </div>
 </div>
+
+
 {% endblock %}
+
