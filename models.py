@@ -46,7 +46,7 @@ class Room(db.Model):
 
 
 
-#function để nhìn database. Dùng python python -m flask --app app shell. from models import display_database. display_database(). Exit() để thoát
+#function để nhìn database. chạy trên terminal python python -m flask --app app shell. from models import display_database. display_database(). Exit() để thoát
 def display_database():
     print("\n--- USERS ---")
     for user in User.query.all():
@@ -80,3 +80,12 @@ def display_database():
         print(f"{user.username}:")
         for room in user.favorite_rooms:
             print(f"  - {room.title}")
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    room_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('reviews', lazy=True))
