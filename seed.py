@@ -1,5 +1,5 @@
 from app import app
-from models import db, User, Room
+from models import db, User, Room, Favorite
 from werkzeug.security import generate_password_hash
 
 with app.app_context():
@@ -15,6 +15,7 @@ with app.app_context():
         db.session.add(host)
         db.session.commit()
 
+    Favorite.query.delete()
     Room.query.delete()
     
     sample_rooms = [
@@ -142,4 +143,5 @@ with app.app_context():
 
     db.session.bulk_save_objects(sample_rooms)
     db.session.commit()
+
     print("Database seeded successfully!")

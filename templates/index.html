@@ -11,7 +11,8 @@
                 <form method="GET" action="/" class="d-flex flex-column flex-md-row align-items-center m-0 w-100">
                     <div class="search-item flex-grow-1 px-3 py-2 w-100">
                         <label class="search-label">Location / Keyword</label>
-                        <input type="text" name="keyword" class="search-input" placeholder="Search near USTH, street..." value="{{ keyword or '' }}">
+                        <input type="text" name="keyword" class="search-input" placeholder="Search near USTH, street..."
+                            value="{{ keyword or '' }}">
                     </div>
 
                     <div class="search-divider d-none d-md-block"></div>
@@ -20,9 +21,11 @@
                         <label class="search-label">District</label>
                         <select name="district" class="search-select">
                             <option value="">All districts</option>
-                            <option value="Cau Giay" {% if district == 'Cau Giay' %}selected{% endif %}>Cau Giay</option>
-                            <option value="Hai Ba Trung" {% if district == 'Hai Ba Trung' %}selected{% endif %}>Hai Ba Trung</option>
-                            <option value="Nam Tu Liem" {% if district == 'Nam Tu Liem' %}selected{% endif %}>Nam Tu Liem</option>
+                            <option value="Cau Giay" {% if district=='Cau Giay' %}selected{% endif %}>Cau Giay</option>
+                            <option value="Hai Ba Trung" {% if district=='Hai Ba Trung' %}selected{% endif %}>Hai Ba
+                                Trung</option>
+                            <option value="Nam Tu Liem" {% if district=='Nam Tu Liem' %}selected{% endif %}>Nam Tu Liem
+                            </option>
                         </select>
                     </div>
 
@@ -32,9 +35,12 @@
                         <label class="search-label">Max Price</label>
                         <select name="max_price" class="search-select">
                             <option value="">Any price</option>
-                            <option value="2000000" {% if max_price == 2000000 %}selected{% endif %}>Under 2,000,000 VND</option>
-                            <option value="4000000" {% if max_price == 4000000 %}selected{% endif %}>Under 4,000,000 VND</option>
-                            <option value="6000000" {% if max_price == 6000000 %}selected{% endif %}>Under 6,000,000 VND</option>
+                            <option value="2000000" {% if max_price==2000000 %}selected{% endif %}>Under 2,000,000 VND
+                            </option>
+                            <option value="4000000" {% if max_price==4000000 %}selected{% endif %}>Under 4,000,000 VND
+                            </option>
+                            <option value="6000000" {% if max_price==6000000 %}selected{% endif %}>Under 6,000,000 VND
+                            </option>
                         </select>
                     </div>
 
@@ -43,9 +49,9 @@
                             <i class="bi bi-search"></i>
                         </button>
                         {% if keyword or district or max_price %}
-                            <a href="/" class="btn btn-sm btn-light rounded-circle p-2 text-muted" title="Clear filter">
-                                <i class="bi bi-x-lg"></i>
-                            </a>
+                        <a href="/" class="btn btn-sm btn-light rounded-circle p-2 text-muted" title="Clear filter">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
                         {% endif %}
                     </div>
                 </form>
@@ -61,27 +67,79 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         {% for room in rooms %}
         <div class="col">
-            <a href="/room/{{ room.id }}" class="text-decoration-none text-reset">
-                <div class="room-card">
-                    <div class="img-wrapper position-relative">
+            <div class="room-card">
+
+                <!-- Room image -->
+                <div class="img-wrapper position-relative">
+                    <a href="/room/{{ room.id }}" class="text-decoration-none">
                         <img src="{{ room.image_url }}" alt="{{ room.title }}" class="room-img" loading="lazy">
-                        <span class="badge district-tag">{{ room.district }}</span>
-                    </div>
+                    </a>
+
+                    <span class="badge district-tag">
+                        {{ room.district }}
+                    </span>
+
+                    <!-- Favorite button -->
+                    {% if current_user.is_authenticated %}
+
+
+                    <form method="POST" action="{{ url_for('toggle_favorite', room_id=room.id) }}"
+                        class="favorite-form">
+
+                        <button type="submit"
+                            class="favorite-btn {% if room.id in favorite_room_ids %}favorited{% endif %}"
+                            title="{% if room.id in favorite_room_ids %}Remove from Favorites{% else %}Add to Favorites{% endif %}">
+
+                            {% if room.id in favorite_room_ids %}
+                            <i class="bi bi-heart-fill"></i>
+                            {% else %}
+                            <i class="bi bi-heart"></i>
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+                    {% endif %}
+                </div>
+
+                <!-- Room information -->
+                <a href="/room/{{ room.id }}" class="text-decoration-none text-reset">
 
                     <div class="card-details mt-2">
+
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="room-title text-truncate mb-0 fw-bold">{{ room.title }}</h6>
-                            <span class="small fw-semibold"><i class="bi bi-star-fill text-warning me-1"></i>4.9</span>
+                            <h6 class="room-title text-truncate mb-0 fw-bold">
+                                {{ room.title }}
+                            </h6>
+
+                            <span class="small fw-semibold">
+                                <i class="bi bi-star-fill text-warning me-1"></i>4.9
+                            </span>
                         </div>
-                        <p class="text-secondary small mb-1 text-truncate">{{ room.address }}</p>
-                        <p class="text-secondary small mb-1">Area: {{ room.area }} m²</p>
+
+                        <p class="text-secondary small mb-1 text-truncate">
+                            {{ room.address }}
+                        </p>
+
+                        <p class="text-secondary small mb-1">
+                            Area: {{ room.area }} m²
+                        </p>
+
                         <div class="price-line mt-1">
-                            <span class="price-val">{{ "{:,.0f}".format(room.price) }} VND</span>
-                            <span class="text-secondary small"> / month</span>
+                            <span class="price-val">
+                                {{ "{:,.0f}".format(room.price) }} VND
+                            </span>
+
+                            <span class="text-secondary small">
+                                / month
+                            </span>
                         </div>
+
                     </div>
-                </div>
-            </a>
+
+                </a>
+
+            </div>
         </div>
         {% else %}
         <div class="col-12 py-5 text-center">
@@ -100,17 +158,20 @@
         background: #ffffff;
         border: 1px solid #DDDDDD;
         border-radius: 40px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         transition: box-shadow 0.2s ease;
         padding: 4px;
     }
+
     .search-bar:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
+
     .search-item {
         display: flex;
         flex-direction: column;
     }
+
     .search-label {
         font-size: 0.72rem;
         font-weight: 700;
@@ -119,7 +180,9 @@
         color: #222222;
         margin-bottom: 2px;
     }
-    .search-input, .search-select {
+
+    .search-input,
+    .search-select {
         border: none;
         outline: none;
         background: transparent;
@@ -128,14 +191,17 @@
         padding: 0;
         width: 100%;
     }
+
     .search-input::placeholder {
         color: #999999;
     }
+
     .search-divider {
         width: 1px;
         height: 32px;
         background-color: #EBEBEB;
     }
+
     .search-btn {
         background-color: #FF385C;
         color: #ffffff;
@@ -149,6 +215,7 @@
         font-size: 1rem;
         transition: transform 0.15s ease, background-color 0.2s;
     }
+
     .search-btn:hover {
         background-color: #E00B41;
         transform: scale(1.05);
@@ -159,21 +226,25 @@
         display: flex;
         flex-direction: column;
     }
+
     .img-wrapper {
         border-radius: 16px;
         overflow: hidden;
         aspect-ratio: 20 / 19;
         background-color: #f0f0f0;
     }
+
     .room-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.35s ease;
     }
+
     .room-card:hover .room-img {
         transform: scale(1.04);
     }
+
     .district-tag {
         position: absolute;
         top: 12px;
@@ -186,10 +257,47 @@
         padding: 4px 8px;
         backdrop-filter: blur(4px);
     }
+
+    .favorite-form {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 5;
+    }
+
+    .favorite-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #555555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+    }
+
+    .favorite-btn:hover {
+        color: #FF385C;
+        transform: scale(1.05);
+    }
+
+    .favorite-btn.favorited {
+        color: #FF385C;
+    }
+
+    .favorite-btn.favorited:hover {
+        color: #d92d4f;
+    }
+
     .room-title {
         font-size: 0.95rem;
         color: #222222;
     }
+
     .price-val {
         font-weight: 700;
         color: #222222;

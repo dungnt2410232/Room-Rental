@@ -5,98 +5,84 @@
 {% block content %}
 <div class="row g-4">
     <div class="col-md-8">
-        <img src="{{ room.image_url }}" class="img-fluid rounded w-100 mb-3" style="max-height: 400px; object-fit: cover;" alt="{{ room.title }}">
+        <img src="{{ room.image_url }}" class="img-fluid rounded w-100 mb-3"
+            style="max-height: 400px; object-fit: cover;" alt="{{ room.title }}">
         <h3 class="fw-bold">{{ room.title }}</h3>
         <p class="text-muted">{{ room.address }}, {{ room.district }}</p>
         <hr>
         <h5>Description</h5>
         <p>{{ room.description }}</p>
-        
+
         <hr>
-<!-- MAP -->
-<h5 class="mt-4 fw-bold">Location Map</h5>
-<div class="ratio ratio-21x9 mb-4">
-    <iframe 
-        src="https://maps.google.com/maps?q={{ room.address | urlencode }},{{ room.district | urlencode }}&output=embed" 
-        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-    </iframe>
-</div>
+        <!-- MAP -->
 
-<hr>
-<!-- REVIEWS & COMMENTS -->
-<h5 class="mt-4 fw-bold">Reviews & Comments</h5>
+        <h5 class="mt-4 fw-bold">Location Map</h5>
+        <div class="ratio ratio-21x9 mb-4">
+            <iframe
+                src="https://maps.google.com/maps?q={{ room.address | urlencode }},{{ room.district | urlencode }}&output=embed"
+                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
 
-<!-- Review Form -->
-{% if current_user.is_authenticated %}
-<form method="POST" class="mb-4">
-    <div class="mb-2">
-        <textarea name="content" class="form-control shadow-sm" rows="3" placeholder="Write your review about this room..." required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-</form>
-{% else %}
-<div class="alert alert-warning shadow-sm">
-    Please <a href="{{ url_for('login') }}" class="fw-bold">Login</a> to leave a comment.
-</div>
-{% endif %}
+        <hr>
+        <!-- REVIEWS & COMMENTS -->
+        <h5 class="mt-4 fw-bold">Reviews & Comments</h5>
 
-<!-- Review List -->
-<div class="list-group shadow-sm mb-5">
-    {% for review in reviews %}
-    <div class="list-group-item border-0 border-bottom py-3">
-        <strong class="text-primary">{{ review.user.username }}</strong>
-        <p class="mb-0 mt-1">{{ review.content }}</p>
-    </div>
-    {% else %}
-    <p class="text-muted">No reviews yet. Be the first to review this room!</p>
-    {% endfor %}
-</div>
-    </div>
-    <div class="col-md-4">
-<div class="card shadow-sm border-0 p-3">
-    <h4 class="text-danger fw-bold mb-3">
-        {{ "{:,.0f}".format(room.price) }} VND/month
-    </h4>
-
-    <p class="mb-1"><strong>Area:</strong> {{ room.area }} m²</p>
-    <p class="mb-3"><strong>District:</strong> {{ room.district }}</p>
-
-    <button class="btn btn-primary w-100">Contact Owner</button>
-
-    {% if current_user.is_authenticated %}
-
-        {% if room in current_user.favorite_rooms %}
-            <form method="POST"
-                  action="{{ url_for('unfavorite_room', room_id=room.id) }}"
-                  class="mt-2">
-
-                <button type="submit"
-                        class="btn btn-outline-danger w-100">
-                    ♥ Remove from Favorites
-                </button>
-            </form>
-
+        <!-- Review Form -->
+        {% if current_user.is_authenticated %}
+        <form method="POST" class="mb-4">
+            <div class="mb-2">
+                <textarea name="content" class="form-control shadow-sm" rows="3"
+                    placeholder="Write your review about this room..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
         {% else %}
-            <form method="POST"
-                  action="{{ url_for('favorite_room', room_id=room.id) }}"
-                  class="mt-2">
-
-                <button type="submit"
-                        class="btn btn-outline-danger w-100">
-                    ♡ Save to Favorites
-                </button>
-            </form>
+        <div class="alert alert-warning shadow-sm">
+            Please <a href="{{ url_for('login') }}" class="fw-bold">Login</a> to leave a comment.
+        </div>
         {% endif %}
 
-    {% else %}
-        <a href="{{ url_for('login') }}"
-           class="btn btn-outline-danger w-100 mt-2">
-            ♡ Login to Save
-        </a>
-    {% endif %}
+        <!-- Review List -->
+        <div class="list-group shadow-sm mb-5">
+            {% for review in reviews %}
+            <div class="list-group-item border-0 border-bottom py-3">
+                <strong class="text-primary">{{ review.user.username }}</strong>
+                <p class="mb-0 mt-1">{{ review.content }}</p>
+            </div>
+            {% else %}
+            <p class="text-muted">No reviews yet. Be the first to review this room!</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 p-3">
+            <h4 class="text-danger fw-bold mb-3">{{ "{:,.0f}".format(room.price) }} VND/month</h4>
+            <p class="mb-1"><strong>Area:</strong> {{ room.area }} m²</p>
+            <p class="mb-3"><strong>District:</strong> {{ room.district }}</p>
+
+            {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('toggle_favorite', room_id=room.id) }}" class="mb-2">
+
+                <button type="submit"
+                    class="btn {% if is_favorited %}btn-danger{% else %}btn-outline-danger{% endif %} w-100">
+
+                    {% if is_favorited %}
+                    <i class="bi bi-heart-fill me-1"></i>
+                    Remove from Favorites
+                    {% else %}
+                    <i class="bi bi-heart me-1"></i>
+                    Add to Favorites
+                    {% endif %}
+
+                </button>
+            </form>
+            {% endif %}
+
+            <button class="btn btn-primary w-100">Contact Owner</button>
+        </div>
     </div>
 </div>
 
 
 {% endblock %}
-
