@@ -143,7 +143,7 @@ def post_room():
 
         # Link anh mac dinh neu bo trong
         if not image_url:
-            image_url = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600'
+            image_url = 'https://keystoneacademic-res.cloudinary.com/image/upload/f_auto/q_auto/g_auto/w_200/dpr_2.0/element/16/164506_logoUSTHmoi-01.png'
 
         # Tao va luu Room moi gan voi current_user.id
         new_room = Room(
