@@ -45,7 +45,7 @@ cd Room-Rental
   python -m venv venv
   source venv/Scripts/activate
   ```
-- **Windows (PowerShell / Command Prompt):**
+- **Windows (Command Prompt):**
   ```bash
   python -m venv venv
   venv\Scripts\activate
